@@ -1,0 +1,9 @@
+# Compiler files
+cache/
+out/
+
+# Test coverage
+lcov.info
+
+# Dotenv file
+.env

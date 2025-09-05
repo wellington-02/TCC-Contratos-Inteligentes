@@ -1,0 +1,15 @@
+{
+    "domains": {
+        "mainnet": {
+            "chainlog": "0xdA0Ab1e0017DEbCd72Be8599041a2aa3bA7e740F"
+        },
+        "optimism": {
+            "l1Messenger": "0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1",
+            "l2Messenger": "0x4200000000000000000000000000000000000007"
+        },
+        "arbitrum_one": {
+            "inbox": "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
+            "arbSys": "0x0000000000000000000000000000000000000064"
+        }
+    }
+}

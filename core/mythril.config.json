@@ -1,0 +1,16 @@
+{
+  "remappings": [
+    "@aragon/=node_modules/@aragon/",
+    "@openzeppelin/=node_modules/@openzeppelin/",
+    "openzeppelin-solidity/=node_modules/openzeppelin-solidity/",
+    "hardhat/=node_modules/hardhat/",
+    "eth-gas-reporter/=node_modules/eth-gas-reporter/",
+    "forge-std/=foundry/lib/forge-std/src/",
+    "ens/=node_modules/@aragon/os/contracts/lib/ens/",
+    "math/=node_modules/@aragon/os/contracts/lib/math/",
+    "misc/=node_modules/@aragon/os/contracts/lib/misc/",
+    "token/=node_modules/@aragon/os/contracts/lib/token/"
+  ],
+  "optimizer": { "enabled": true, "runs": 200 },
+  "evmVersion": "byzantium"
+}

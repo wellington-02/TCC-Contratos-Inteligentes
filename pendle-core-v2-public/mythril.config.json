@@ -1,0 +1,7 @@
+{
+  "solc": "0.8.23",
+  "solc_args": "--base-path . --allow-paths .,./node_modules --include-path node_modules",
+  "remappings": [
+    "@openzeppelin/=node_modules/@openzeppelin/"
+  ]
+}

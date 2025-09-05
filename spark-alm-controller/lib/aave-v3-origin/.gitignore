@@ -1,0 +1,33 @@
+# build and cache
+cache/
+out/
+
+# general
+.env
+.env.bk
+.assets
+reports/
+diffs/
+downloads/
+
+# editors
+.idea
+.vscode
+lcov*
+
+# well, looks strange to ignore package-lock, but we have only pretter and it's temproray
+package-lock.json
+node_modules
+
+# ignore foundry deploy artifacts
+broadcast/
+
+.DS_Store
+
+# certora
+.certora*
+.certora*.json
+**.last_conf*
+certora-logs
+certora_debug_log.txt
+resource_errors.json

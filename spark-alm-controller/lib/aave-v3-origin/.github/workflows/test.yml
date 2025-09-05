@@ -1,0 +1,91 @@
+name: Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: oven-sh/setup-bun@8f24390df009a496891208e5e36b8a1de1f45135
+      - name: Install node dependencies
+        run: bun install
+      - name: lint
+        run: bun run lint --check
+
+  test:
+    name: Foundry build n test
+    runs-on: ubuntu-latest
+    env:
+      FOUNDRY_PROFILE: ci
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: oven-sh/setup-bun@8f24390df009a496891208e5e36b8a1de1f45135
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773
+        with:
+          version: nightly
+
+      - name: Install node dependencies
+        run: bun install
+
+      - name: Run Forge build
+        run: |
+          forge --version | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_version ; test ${PIPESTATUS[0]} -eq 0
+          forge cache ls
+          forge build | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_build ; test ${PIPESTATUS[0]} -eq 0
+        id: build
+
+      - name: Run Forge tests
+        run: |
+          forge test -vv | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_test
+          echo "testStatus=${PIPESTATUS[0]}" >> $GITHUB_ENV
+        id: test
+
+      - name: Create comment body
+        id: get-comment-body
+        run: |
+          printf "Foundry report\n\n" > /tmp/template.md
+          printf "\`\`\`shell\n$(cat /tmp/foundry_version)\n\`\`\`\n\n" >> /tmp/template.md
+          printf "<details><summary>Build log</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_build)\n\`\`\`\n</details>\n\n" >> /tmp/template.md
+          printf "<details><summary>Test ${{ env.testStatus == 0 && 'success :rainbow:' || 'error :finnadie::x:'}}</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_test)\n\`\`\`\n</details>\n\n" >> /tmp/template.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/template.md
+
+      - name: Save PR number
+        if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          mkdir -p ./pr
+          echo $PR_NUMBER > ./pr/pr_number.txt
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: pr_number
+          path: pr/pr_number.txt
+
+      # we let failing tests pass so we can log them in the comment, still we want the ci to fail
+      - name: Post test
+        if: ${{ env.testStatus != 0 }}
+        run: |
+          echo "tests failed"
+          exit 1

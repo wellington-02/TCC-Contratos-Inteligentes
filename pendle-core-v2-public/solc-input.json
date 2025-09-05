@@ -1,0 +1,17 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/core/Market/v3/PendleMarketV3.sol": {
+      "urls": ["contracts/core/Market/v3/PendleMarketV3.sol"]
+    }
+  },
+  "settings": {
+    "optimizer": { "enabled": true, "runs": 200 },
+    "remappings": ["@openzeppelin/=node_modules/@openzeppelin/"],
+    "outputSelection": {
+      "*": {
+        "*": ["abi","evm.bytecode.object","evm.deployedBytecode.object","metadata"]
+      }
+    }
+  }
+}
