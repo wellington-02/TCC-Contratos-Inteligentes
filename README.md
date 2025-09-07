@@ -27,7 +27,7 @@ Usando o repositório core (Lido) como exemplo.
 * obs: comando para instalar o mythril, caso exija: pip install mythril
 
 ## Instuções para realizar a análise estática em repositórios que utilizam o foundry:
-* 1 - Acesse a pasta do contrado desejado: cd core
+* 1 - Acesse a pasta do contrado desejado: cd nome do repositório
 * 2 - Execute o comando para de acessar a venv: source venv/bin/activate
 * 3 - Instale o foundry: forge install
 * 4 - Caso precise, intale o OpenZeppelin: forge install OpenZeppelin/openzeppelin-contracts
